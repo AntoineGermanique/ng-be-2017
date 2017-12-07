@@ -7,29 +7,35 @@ import { API_ENDPOINT } from './app.tokens';
 
 import { Contact } from './models/contact';
 
-interface ContactResponse  { item  : Contact    }
-interface ContactsResponse { items : Contact[]  }
-
+interface ContactResponse { item: Contact }
+interface ContactsResponse { items: Contact[] }
+interface EmailAvailable { error?: string }
 
 @Injectable()
 export class ContactsService {
 
-  constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint) {}
-
+  constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint) { }
+  addContact(contact: Contact) {
+    return this.http.post<ContactResponse>(`${this.apiEndpoint}/contacts`, contact)
+      .pipe(map(data => data.item));
+  }
 
   getContact(id: string): Observable<Contact> {
     return this.http.get<ContactResponse>(`${this.apiEndpoint}/contacts/${id}`)
-        .pipe(map(data => data.item));
+      .pipe(map(data => data.item));
   }
 
   getContacts(): Observable<Array<Contact>> {
     return this.http.get<ContactsResponse>(`${this.apiEndpoint}/contacts`)
-        .pipe(map(data => data.items));
+      .pipe(map(data => data.items));
   }
-
+  isEmailNew(email: string) {
+    return this.http.get<EmailAvailable>(`${this.apiEndpoint}/contacts`)
+      .pipe(map(data => data))
+  }
   updateContact(contact: Contact): Observable<Contact> {
     return this.http.put<ContactResponse>(`${this.apiEndpoint}/contacts/${contact.id}`, contact)
-        .pipe(map(data => data.item));
+      .pipe(map(data => data.item));
   }
 
 }
