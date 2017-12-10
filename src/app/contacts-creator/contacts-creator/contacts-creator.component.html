@@ -1,5 +1,5 @@
 <div class="trm-contacts-creator">
-  <form #f="ngForm" (submit)='submit(f.value)'>
+  <form [formGroup]="form" (submit)='submit(form.value)'>
     <mat-card>
       <mat-card-title-group>
         <img mat-card-md-image alt="Placeholder image" src="/assets/images/placeholder.png">
@@ -9,32 +9,44 @@
       <mat-card-content>
         <div fxLayout="column">
           <mat-input-container fxFlex>
-            <input matInput placeholder="Name" name="name" #name="ngModel" required ngModel> </mat-input-container>
-            <mat-hint *ngIf="!name.valid && !name.pristine">
-              required
-            </mat-hint>
+            <input matInput placeholder="Name" formControlName="name"> </mat-input-container>
+          <mat-hint *ngIf="!form.get('name')?.valid && !form.get('name').pristine">
+            required
+          </mat-hint>
           <mat-input-container fxFlex>
-            <input matInput placeholder="Email" name="email" #email="ngModel" ngModel trmValidateEmail trmEmailAvailabilityValidator> </mat-input-container>
-            <mat-hint *ngIf="!email.valid && !email.pristine">
-                required
-            </mat-hint>
-            <mat-input-container fxFlex>
-            <input matInput placeholder="Birthday" name="birthday" type="date" ngModel> </mat-input-container>
+            <input matInput placeholder="Email" formControlName="email"> </mat-input-container>
+          <mat-hint *ngIf="!form.get('email')?.valid && !form.get('email')?.pristine">
+            problem
+          </mat-hint>
           <mat-input-container fxFlex>
-            <input matInput placeholder="Phone" name="phone" ngModel> </mat-input-container>
+            <input matInput placeholder="Birthday" name="birthday" type="date"> </mat-input-container>
+          <div formArrayName="phone">
+            <div *ngFor="let phone of form.get('phone').controls; let i = index; let l = last">
+              <mat-input-container fxFlex>
+                <input matInput placeholder="Phone" name="phone" [formControlName]="i">
+              </mat-input-container>
+              <button mat-icon-button type="button" *ngIf="i >= 1" (click)="removePhone(i)">
+                <mat-icon>highlight_off</mat-icon>
+              </button>
+
+              <button mat-icon-button type="button" *ngIf="l && phone.value != ''" (click)="addPhone()">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </div>
+          </div>
           <mat-input-container fxFlex>
-            <input matInput placeholder="Website" name="website" ngModel> </mat-input-container>
+            <input matInput placeholder="Website" name="website"> </mat-input-container>
           <mat-radio-group name="gender">
             <mat-radio-button> INSERT_GENDER_VARIANT </mat-radio-button>
           </mat-radio-group>
-          <fieldset ngModelGroup="address" fxLayout="column">
+          <fieldset formGroupName='address' fxLayout="column">
             <legend>Address</legend>
             <mat-input-container fxFlex>
-              <input matInput placeholder="Street" name="street" ngModel> </mat-input-container>
+              <input matInput placeholder="Street" name="street"> </mat-input-container>
             <mat-input-container fxFlex>
-              <input matInput placeholder="Zip" name="zip" ngModel> </mat-input-container>
+              <input matInput placeholder="Zip" name="zip"> </mat-input-container>
             <mat-input-container fxFlex>
-              <input matInput placeholder="City" name="city" ngModel> </mat-input-container>
+              <input matInput placeholder="City" name="city" formControlName="city"> </mat-input-container>
             <mat-select placeholder="Country" name="country">
               <mat-option>INSER_COUNTRY_NAME</mat-option>
             </mat-select>
@@ -42,7 +54,7 @@
         </div>
       </mat-card-content>
       <mat-card-actions fxLayout fxLayoutAlign="center center">
-        <button mat-button type="submit" [disabled]="!f.valid">Save</button>
+        <button mat-button type="submit" [disabled]="!form?.valid">Save</button>
         <a mat-button title="Cancel creating new contact" routerLink="/">Cancel</a>
       </mat-card-actions>
     </mat-card>

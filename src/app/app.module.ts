@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ContactsMaterialModule } from './contacts-material.module';
 import { ContactsCreatorModule } from './contacts-creator/contacts-creator.module'
@@ -35,7 +35,8 @@ import { ContactsCreatorComponent } from './contacts-creator/contacts-creator/co
     RouterModule.forRoot(APP_ROUTES),
     HttpClientModule,
     FormsModule,
-    ContactsCreatorModule
+    ContactsCreatorModule, 
+    ReactiveFormsModule
   ],
   providers: [
     ContactsService,
